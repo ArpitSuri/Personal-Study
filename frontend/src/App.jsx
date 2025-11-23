@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import ProtectedRoute from "./components/ProtectedRoute";
-
+import "./App.css"
 import Login from "./pages/auth/Login";
 import Signup from "./pages/auth/Signup";
 import Dashboard from "./pages/dashboard/Dashboard";

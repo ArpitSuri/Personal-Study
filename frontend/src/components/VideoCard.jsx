@@ -1,34 +1,3 @@
-// import { useNavigate } from "react-router-dom";
-
-// export default function VideoCard({ video }) {
-//     const navigate = useNavigate();
-
-//     const handleClick = () => {
-//         navigate(`/video/${video._id}`);
-//     };
-
-//     return (
-//         <div
-//             onClick={handleClick}
-//             className="cursor-pointer bg-white dark:bg-gray-800 rounded-lg shadow hover:shadow-md overflow-hidden"
-//         >
-//             <img
-//                 src={video.thumbnail}
-//                 alt={video.title}
-//                 className="w-full h-40 object-cover"
-//             />
-//             <div className="p-3">
-//                 <div className="text-sm font-semibold line-clamp-2">
-//                     {video.title}
-//                 </div>
-//                 {video.duration && (
-//                     <div className="text-xs text-gray-500 mt-1">{video.duration}</div>
-//                 )}
-//             </div>
-//         </div>
-//     );
-// }
-
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
@@ -41,10 +10,31 @@ export default function VideoCard({ video }) {
         navigate(`/video/${video._id}`);
     };
 
-    const formatDuration = (duration) => {
-        if (!duration) return null;
-        return duration;
-    };
+    // const formatDuration = (duration) => {
+    //     if (!duration) return null;
+    //     return duration;
+    // };
+
+  const formatDuration = (duration) => {
+    if (!duration) return null;
+
+    // duration like "239:16"
+    const parts = duration.split(":");
+    if (parts.length !== 2) return duration;
+
+    const extendedMinutes = parseInt(parts[0], 10);
+    const seconds = parseInt(parts[1], 10);
+
+    const hours = Math.floor(extendedMinutes / 60);
+    const minutes = extendedMinutes % 60;
+
+    return [
+      String(hours).padStart(2, "0"),
+      String(minutes).padStart(2, "0"),
+      String(seconds).padStart(2, "0"),
+    ].join(":");
+  };
+
 
     return (
         <>

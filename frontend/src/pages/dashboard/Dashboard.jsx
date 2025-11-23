@@ -186,9 +186,9 @@
 
 
 import { useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getMyPlaylists, createPlaylistApi } from "../../api/playlists";
-import { getVideosApi, addVideoApi } from "../../api/videos";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getMyPlaylists, createPlaylistApi, deletePlaylistApi } from "../../api/playlists";
+import { getVideosApi, addVideoApi, deleteVideoApi } from "../../api/videos";
 import Navbar from "../../components/Navbar";
 import Modal from "../../components/Modal";
 import VideoCard from "../../components/VideoCard";
@@ -247,6 +247,28 @@ export default function Dashboard() {
             toast.error(err.response?.data?.message || "Failed to add video");
         }
     };
+
+    const deletePlaylistMutation = useMutation({
+        mutationFn: (id) => deletePlaylistApi(id),
+        onSuccess: () => {
+            toast.success("Playlist deleted");
+            queryClient.invalidateQueries(["playlists"]);
+        },
+        onError: (err) => {
+            toast.error(err.response?.data?.message || "Failed to delete playlist");
+        },
+    });
+
+    const deleteVideoMutation = useMutation({
+        mutationFn: (id) => deleteVideoApi(id),
+        onSuccess: () => {
+            toast.success("Video deleted");
+            queryClient.invalidateQueries(["soloVideos"]);
+        },
+        onError: (err) => {
+            toast.error(err.response?.data?.message || "Failed to delete video");
+        },
+    });
 
     return (
         <div className="min-h-screen bg-linear-to-br from-gray-900 via-gray-800 to-gray-900">
@@ -332,7 +354,7 @@ export default function Dashboard() {
                     <div className="flex flex-col xs:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
                         <button
                             onClick={() => setVideoModalOpen(true)}
-                            className="btn-glow group flex items-center justify-center gap-2 px-4 py-2.5 bg-linear-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white rounded-xl text-sm font-medium transition-all duration-300 shadow-lg shadow-emerald-500/20"
+                            className="btn-glow group flex items-center justify-center gap-2 px-4 py-2.5 bg-linear-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white rounded-xl text-sm font-medium transition-all duration-300 shadow-lg shadow-emerald-500/20 cursor-pointer"
                         >
                             <svg className="w-4 h-4 transition-transform group-hover:rotate-90 duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -341,7 +363,7 @@ export default function Dashboard() {
                         </button>
                         <button
                             onClick={() => setPlaylistModalOpen(true)}
-                            className="btn-glow group flex items-center justify-center gap-2 px-4 py-2.5 bg-linear-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white rounded-xl text-sm font-medium transition-all duration-300 shadow-lg shadow-blue-500/20"
+                            className="btn-glow group flex items-center justify-center gap-2 px-4 py-2.5 bg-linear-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white rounded-xl text-sm font-medium transition-all duration-300 shadow-lg shadow-blue-500/20 cursor-pointer"
                         >
                             <svg className="w-4 h-4 transition-transform group-hover:rotate-90 duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -384,28 +406,41 @@ export default function Dashboard() {
                     ) : (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                             {playlists.map((pl, idx) => (
-                                <Link
+                                <div
                                     key={pl._id}
-                                    to={`/playlist/${pl._id}`}
-                                    className={`card-hover group bg-linear-to-br from-gray-800/80 to-gray-900/80 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-5 opacity-0 animate-fade-in-up stagger-${Math.min(idx + 1, 6)}`}
+                                    className={`relative card-hover group bg-linear-to-br from-gray-800/80 to-gray-900/80 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-5 opacity-0 animate-fade-in-up stagger-${Math.min(idx + 1, 6)}`}
                                 >
-                                    <div className="flex items-start justify-between mb-3">
-                                        <div className="p-2 bg-blue-500/20 rounded-lg group-hover:bg-blue-500/30 transition-colors">
-                                            <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-                                            </svg>
-                                        </div>
-                                        <svg className="w-5 h-5 text-gray-500 group-hover:text-white group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                    {/* DELETE BUTTON */}
+                                    <button
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            deletePlaylistMutation.mutate(pl._id);
+                                        }}
+                                        className="absolute top-3 right-3 p-2 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 transition cursor-pointer"
+                                    >
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                                         </svg>
-                                    </div>
-                                    <h3 className="font-semibold text-white mb-1 group-hover:text-blue-400 transition-colors line-clamp-1">
-                                        {pl.title}
-                                    </h3>
-                                    <p className="text-sm text-gray-400 line-clamp-2">
-                                        {pl.description || "No description"}
-                                    </p>
-                                </Link>
+                                    </button>
+
+                                    <Link to={`/playlist/${pl._id}`} className="block">
+                                        <div className="flex items-start justify-between mb-3">
+                                            <div className="p-2 bg-blue-500/20 rounded-lg group-hover:bg-blue-500/30 transition-colors">
+                                                <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                                                </svg>
+                                            </div>
+                                        </div>
+
+                                        <h3 className="font-semibold text-white mb-1 group-hover:text-blue-400 transition-colors line-clamp-1">
+                                            {pl.title}
+                                        </h3>
+                                        <p className="text-sm text-gray-400 line-clamp-2">
+                                            {pl.description || "No description"}
+                                        </p>
+                                    </Link>
+                                </div>
                             ))}
                         </div>
                     )}
@@ -448,8 +483,22 @@ export default function Dashboard() {
                             {soloVideos.map((video, idx) => (
                                 <div
                                     key={video._id}
-                                    className={`card-hover opacity-0 animate-fade-in-up stagger-${Math.min(idx + 1, 6)}`}
+                                    className={`relative card-hover opacity-0 animate-fade-in-up stagger-${Math.min(idx + 1, 6)}`}
                                 >
+                                    {/* DELETE BUTTON */}
+                                    <button
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            deleteVideoMutation.mutate(video._id);
+                                        }}
+                                        className="absolute top-3 right-3 z-20 p-2 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 transition cursor-pointer"
+                                    >
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+
                                     <VideoCard video={video} />
                                 </div>
                             ))}
