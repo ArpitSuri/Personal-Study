@@ -8,6 +8,7 @@ import authRoutes from "./routers/authRouter.js";
 import playlistRoutes from "./routers/playlistRouter.js";
 import videoRoutes from "./routers/videoRouter.js";
 import profileRoutes from "./routers/profileRouter.js";
+import calendarRoutes from "./routers/calendarRouter.js";
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/playlists", playlistRoutes);
 app.use("/api/videos", videoRoutes);
 app.use("/api/profile", profileRoutes);
+app.use("/api/calendar", calendarRoutes);
 
 app.get("/", (req, res) => {
     res.send("LMS backend running");
