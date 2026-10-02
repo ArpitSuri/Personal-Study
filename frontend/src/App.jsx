@@ -8,6 +8,7 @@ import Dashboard from "./pages/dashboard/Dashboard";
 import PlaylistDetails from "./pages/playlist/PlaylistDetails";
 import VideoPlayer from "./pages/video/VideoPlayer";
 import Profile from "./pages/profile/Profile";
+import Calendar from "./pages/calendar/Calendar";
 
 function App() {
   return (
@@ -22,6 +23,15 @@ function App() {
           element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/calendar"
+          element={
+            <ProtectedRoute>
+              <Calendar />
             </ProtectedRoute>
           }
         />

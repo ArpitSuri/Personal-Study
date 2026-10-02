@@ -10,31 +10,23 @@ export default function VideoCard({ video }) {
         navigate(`/video/${video._id}`);
     };
 
-    // const formatDuration = (duration) => {
-    //     if (!duration) return null;
-    //     return duration;
-    // };
+    const formatDuration = (duration) => {
+        if (!duration) return null;
+        const parts = duration.split(":");
+        if (parts.length !== 2) return duration;
 
-  const formatDuration = (duration) => {
-    if (!duration) return null;
+        const extendedMinutes = parseInt(parts[0], 10);
+        const seconds = parseInt(parts[1], 10);
 
-    // duration like "239:16"
-    const parts = duration.split(":");
-    if (parts.length !== 2) return duration;
+        const hours = Math.floor(extendedMinutes / 60);
+        const minutes = extendedMinutes % 60;
 
-    const extendedMinutes = parseInt(parts[0], 10);
-    const seconds = parseInt(parts[1], 10);
-
-    const hours = Math.floor(extendedMinutes / 60);
-    const minutes = extendedMinutes % 60;
-
-    return [
-      String(hours).padStart(2, "0"),
-      String(minutes).padStart(2, "0"),
-      String(seconds).padStart(2, "0"),
-    ].join(":");
-  };
-
+        return [
+            String(hours).padStart(2, "0"),
+            String(minutes).padStart(2, "0"),
+            String(seconds).padStart(2, "0"),
+        ].join(":");
+    };
 
     return (
         <>
@@ -54,7 +46,7 @@ export default function VideoCard({ video }) {
           }
         }
         .skeleton-img {
-          background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+          background: linear-gradient(90deg, #111827 25%, #1f2937 50%, #111827 75%);
           background-size: 200% 100%;
           animation: shimmer 1.5s infinite;
         }
@@ -63,7 +55,7 @@ export default function VideoCard({ video }) {
         }
         .video-card:hover {
           transform: translateY(-4px);
-          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+          border-color: #374151;
         }
         .video-card:hover .thumbnail-overlay {
           opacity: 1;
@@ -74,9 +66,6 @@ export default function VideoCard({ video }) {
         }
         .video-card:hover .thumbnail-img {
           transform: scale(1.05);
-        }
-        .video-card:active {
-          transform: translateY(-2px) scale(0.98);
         }
         .thumbnail-container {
           position: relative;
@@ -104,14 +93,13 @@ export default function VideoCard({ video }) {
           position: absolute;
           bottom: 8px;
           right: 8px;
-          background: rgba(0, 0, 0, 0.85);
-          backdrop-filter: blur(4px);
+          background: rgba(0, 0, 0, 0.9);
+          border: 1px solid rgba(255, 255, 255, 0.1);
           padding: 2px 6px;
           border-radius: 4px;
           font-size: 11px;
           font-weight: 600;
           color: white;
-          letter-spacing: 0.025em;
         }
         .image-fade-in {
           animation: scaleIn 0.3s ease-out forwards;
@@ -120,20 +108,18 @@ export default function VideoCard({ video }) {
 
             <div
                 onClick={handleClick}
-                className="video-card cursor-pointer bg-linear-to-br from-gray-800/80 to-gray-900/80 backdrop-blur-sm border border-gray-700/50 rounded-2xl overflow-hidden group"
+                className="video-card cursor-pointer bg-gray-950 border border-gray-800/80 rounded-2xl overflow-hidden group shadow-lg"
             >
                 {/* Thumbnail Container */}
-                <div className="thumbnail-container aspect-video bg-gray-800">
-                    {/* Skeleton loader */}
+                <div className="thumbnail-container aspect-video bg-black">
                     {!imageLoaded && !imageError && (
                         <div className="skeleton-img absolute inset-0 w-full h-full" />
                     )}
 
-                    {/* Error state */}
                     {imageError && (
-                        <div className="absolute inset-0 w-full h-full bg-gray-800 flex items-center justify-center">
+                        <div className="absolute inset-0 w-full h-full bg-black flex items-center justify-center">
                             <div className="text-center">
-                                <svg className="w-10 h-10 text-gray-600 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-10 h-10 text-gray-700 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                                 </svg>
                                 <span className="text-xs text-gray-500">No thumbnail</span>
@@ -141,29 +127,24 @@ export default function VideoCard({ video }) {
                         </div>
                     )}
 
-                    {/* Actual thumbnail */}
                     <img
                         src={video.thumbnail}
                         alt={video.title}
                         onLoad={() => setImageLoaded(true)}
                         onError={() => setImageError(true)}
-                        className={`thumbnail-img w-full h-full object-cover ${imageLoaded ? 'image-fade-in' : 'opacity-0'
-                            }`}
+                        className={`thumbnail-img w-full h-full object-cover ${imageLoaded ? 'image-fade-in' : 'opacity-0'}`}
                     />
 
-                    {/* Hover overlay */}
                     <div className="thumbnail-overlay" />
 
-                    {/* Play button on hover */}
                     <div className="play-button">
-                        <div className="w-14 h-14 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-xl">
-                            <svg className="w-6 h-6 text-gray-900 ml-1" fill="currentColor" viewBox="0 0 24 24">
+                        <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-2xl">
+                            <svg className="w-5 h-5 text-black ml-0.5" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M8 5v14l11-7z" />
                             </svg>
                         </div>
                     </div>
 
-                    {/* Duration badge */}
                     {video.duration && (
                         <div className="duration-badge">
                             {formatDuration(video.duration)}
@@ -173,15 +154,14 @@ export default function VideoCard({ video }) {
 
                 {/* Content */}
                 <div className="p-4">
-                    <h3 className="text-sm font-semibold text-white line-clamp-2 leading-snug group-hover:text-blue-400 transition-colors">
+                    <h3 className="text-sm font-semibold text-white line-clamp-2 leading-snug group-hover:text-gray-300 transition-colors">
                         {video.title}
                     </h3>
 
-                    {/* Meta info */}
                     <div className="flex items-center gap-3 mt-2">
                         {video.channelTitle && (
-                            <div className="flex items-center gap-1.5 text-xs text-gray-500">
-                                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div className="flex items-center gap-1.5 text-xs text-gray-400">
+                                <svg className="w-3.5 h-3.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                 </svg>
                                 <span className="truncate max-w-[120px]">{video.channelTitle}</span>
@@ -189,8 +169,8 @@ export default function VideoCard({ video }) {
                         )}
 
                         {video.createdAt && (
-                            <div className="flex items-center gap-1.5 text-xs text-gray-500">
-                                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div className="flex items-center gap-1.5 text-xs text-gray-400">
+                                <svg className="w-3.5 h-3.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                                 <span>
@@ -203,9 +183,6 @@ export default function VideoCard({ video }) {
                         )}
                     </div>
                 </div>
-
-                {/* Bottom accent line on hover */}
-                <div className="h-0.5 bg-linear-to-r from-blue-500 via-purple-500 to-pink-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
             </div>
         </>
     );
