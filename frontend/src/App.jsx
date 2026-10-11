@@ -9,6 +9,7 @@ import PlaylistDetails from "./pages/playlist/PlaylistDetails";
 import VideoPlayer from "./pages/video/VideoPlayer";
 import Profile from "./pages/profile/Profile";
 import Calendar from "./pages/calendar/Calendar";
+import YouTubeVideos from "./pages/youtube/YouTubeVideos";
 
 function App() {
   return (
@@ -32,6 +33,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Calendar />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/youtube"
+          element={
+            <ProtectedRoute>
+              <YouTubeVideos />
             </ProtectedRoute>
           }
         />

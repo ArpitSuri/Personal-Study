@@ -1,128 +1,3 @@
-// import { useParams } from "react-router-dom";
-// import { useQuery, useQueryClient } from "@tanstack/react-query";
-// import { getPlaylistWithVideosApi } from "../../api/playlists";
-// import { addVideoApi, deleteVideoApi } from "../../api/videos";
-// import Navbar from "../../components/Navbar";
-// import Modal from "../../components/Modal";
-// import VideoCard from "../../components/VideoCard";
-// import { useState } from "react";
-// import { toast } from "react-hot-toast";
-
-// export default function PlaylistDetails() {
-//     const { id } = useParams();
-//     const queryClient = useQueryClient();
-
-//     const [videoModalOpen, setVideoModalOpen] = useState(false);
-//     const [videoForm, setVideoForm] = useState({ url: "" });
-
-//     const { data, isLoading } = useQuery({
-//         queryKey: ["playlist", id],
-//         queryFn: () => getPlaylistWithVideosApi(id).then((res) => res.data),
-//     });
-
-//     const handleAddVideo = async (e) => {
-//         e.preventDefault();
-//         try {
-//             await addVideoApi({ url: videoForm.url, playlistId: id });
-//             toast.success("Video added to playlist");
-//             setVideoModalOpen(false);
-//             setVideoForm({ url: "" });
-//             queryClient.invalidateQueries(["playlist", id]);
-//         } catch (err) {
-//             toast.error(err.response?.data?.message || "Failed to add video");
-//         }
-//     };
-
-//     const handleDeleteVideo = async (videoId) => {
-//         try {
-//             await deleteVideoApi(videoId);
-//             toast.success("Video removed");
-//             queryClient.invalidateQueries(["playlist", id]);
-//         } catch (err) {
-//             toast.error(err.response?.data?.message || "Failed to delete video");
-//         }
-//     };
-
-//     if (isLoading || !data) {
-//         return (
-//             <>
-//                 <Navbar />
-//                 <div className="p-6">Loading...</div>
-//             </>
-//         );
-//     }
-
-//     const { playlist, videos } = data;
-
-//     return (
-//         <>
-//             <Navbar />
-//             <div className="p-6 max-w-5xl mx-auto">
-//                 <div className="flex justify-between items-center mb-4">
-//                     <div>
-//                         <h1 className="text-2xl font-bold">{playlist.title}</h1>
-//                         <p className="text-sm text-gray-500">
-//                             {playlist.description || "No description"}
-//                         </p>
-//                     </div>
-//                     <button
-//                         onClick={() => setVideoModalOpen(true)}
-//                         className="px-3 py-1 bg-green-600 text-white rounded text-sm"
-//                     >
-//                         + Add Video
-//                     </button>
-//                 </div>
-
-//                 {videos.length === 0 ? (
-//                     <p className="text-sm text-gray-500">
-//                         No videos in this playlist yet.
-//                     </p>
-//                 ) : (
-//                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-//                         {videos.map((video) => (
-//                             <div key={video._id} className="relative">
-//                                 <VideoCard video={video} />
-//                                 <button
-//                                     onClick={(e) => {
-//                                         e.stopPropagation();
-//                                         handleDeleteVideo(video._id);
-//                                     }}
-//                                     className="absolute top-1 right-1 bg-red-600 text-white text-xs px-2 py-1 rounded"
-//                                 >
-//                                     ✕
-//                                 </button>
-//                             </div>
-//                         ))}
-//                     </div>
-//                 )}
-//             </div>
-
-//             <Modal
-//                 open={videoModalOpen}
-//                 onClose={() => setVideoModalOpen(false)}
-//                 title="Add Video to Playlist"
-//             >
-//                 <form className="space-y-3" onSubmit={handleAddVideo}>
-//                     <input
-//                         className="w-full border rounded p-2 dark:bg-gray-700"
-//                         placeholder="YouTube URL"
-//                         value={videoForm.url}
-//                         onChange={(e) =>
-//                             setVideoForm({
-//                                 ...videoForm,
-//                                 url: e.target.value,
-//                             })
-//                         }
-//                     />
-//                     <button className="w-full bg-green-600 text-white p-2 rounded">
-//                         Add
-//                     </button>
-//                 </form>
-//             </Modal>
-//         </>
-//     );
-// }
-
 import { useParams, Link } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getPlaylistWithVideosApi } from "../../api/playlists";
@@ -292,7 +167,7 @@ export default function PlaylistDetails() {
             <div className="px-4 sm:px-6 lg:px-8 py-6 sm:py-8 max-w-7xl mx-auto">
                 {/* Back Button */}
                 <Link
-                    to="/"
+                    to="/youtube"
                     className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-6 transition-colors group animate-fade-in"
                 >
                     <svg
@@ -303,7 +178,7 @@ export default function PlaylistDetails() {
                     >
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                     </svg>
-                    <span className="text-sm font-medium">Back to Dashboard</span>
+                    <span className="text-sm font-medium">Back to YouTube Videos</span>
                 </Link>
 
                 {/* Header */}
