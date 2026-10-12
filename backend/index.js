@@ -9,6 +9,7 @@ import playlistRoutes from "./routers/playlistRouter.js";
 import videoRoutes from "./routers/videoRouter.js";
 import profileRoutes from "./routers/profileRouter.js";
 import calendarRoutes from "./routers/calendarRouter.js";
+import focusRoutes from "./routers/focusRouter.js";
 
 const app = express();
 
@@ -22,7 +23,7 @@ app.use("/api/playlists", playlistRoutes);
 app.use("/api/videos", videoRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/calendar", calendarRoutes);
-
+app.use("/api/focus", focusRoutes);
 app.get("/", (req, res) => {
     res.send("LMS backend running");
 });
