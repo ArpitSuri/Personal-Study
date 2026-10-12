@@ -1,5 +1,5 @@
 import express from "express";
-import { auth } from "../middleware/authMiddleware.js"; // use your existing auth middleware
+import { auth } from "../middleWare/authMiddleware.js"; // use your existing auth middleware
 import {
     createSession,
     getSessionsByDate,
