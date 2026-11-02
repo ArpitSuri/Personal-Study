@@ -159,10 +159,10 @@ export default function Calendar() {
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 animate-fade-in-up">
                     <div>
                         <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-                            Learning Calendar
+                            Date Planner
                         </h1>
                         <p className="text-gray-400 mt-1 text-sm sm:text-base">
-                            Track and accomplish your daily targets in Google Calendar style
+                            Plan tasks by date, track progress, and check off what you finish
                         </p>
                     </div>
 

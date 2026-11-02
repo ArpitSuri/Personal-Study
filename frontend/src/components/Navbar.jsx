@@ -1,248 +1,81 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
+
+const links = [
+    { path: "/", label: "Dashboard", icon: <svg viewBox="0 0 24 24"><path d="M4 6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6Zm10 0a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2V6ZM4 16a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2Zm10 0a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2v-2Z" /></svg> },
+    { path: "/planner", label: "Planner", icon: <svg viewBox="0 0 24 24"><path d="M8 3v4m8-4v4M4 10h16M5 5h14a1 1 0 0 1 1 1v14H4V6a1 1 0 0 1 1-1Zm3 9h3m-3 4h6" /></svg> },
+    { path: "/notes", label: "Notes", icon: <svg viewBox="0 0 24 24"><path d="M8 4h8l4 4v12H4V4h4Zm0 0v5h8V4M8 14h8m-8 4h6" /></svg> },
+    { path: "/youtube", label: "YouTube Videos", icon: <svg viewBox="0 0 24 24"><path d="m10 9 5 3-5 3V9Zm11 3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg> },
+    { path: "/profile", label: "Profile", icon: <svg viewBox="0 0 24 24"><path d="M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0Zm-11 14a7 7 0 0 1 14 0H5Z" /></svg> },
+];
 
 export default function Navbar() {
     const { user, logout } = useContext(AuthContext);
     const navigate = useNavigate();
     const location = useLocation();
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [collapsed, setCollapsed] = useState(() => localStorage.getItem("sidebar-collapsed") === "true");
+    const [mobileOpen, setMobileOpen] = useState(false);
     const [loggingOut, setLoggingOut] = useState(false);
 
+    useEffect(() => {
+        document.body.classList.toggle("sidebar-collapsed", collapsed);
+        return () => document.body.classList.remove("sidebar-collapsed");
+    }, [collapsed]);
+    useEffect(() => setMobileOpen(false), [location.pathname]);
+
+    const toggleCollapsed = () => setCollapsed((value) => {
+        localStorage.setItem("sidebar-collapsed", String(!value));
+        return !value;
+    });
+    const isActive = (path) => path === "/youtube"
+        ? ["/youtube", "/playlist", "/video"].some((prefix) => location.pathname.startsWith(prefix))
+        : path === "/planner" ? ["/planner", "/calendar"].includes(location.pathname) : location.pathname === path;
     const handleLogout = async () => {
         setLoggingOut(true);
-        try {
-            await logout();
-            navigate("/login");
-        } finally {
-            setLoggingOut(false);
-        }
+        try { await logout(); navigate("/login"); }
+        finally { setLoggingOut(false); }
     };
 
-    const isActive = (path) => {
-        if (path === "/youtube") {
-            return ["/youtube", "/playlist", "/video"].some((p) => location.pathname.startsWith(p));
-        }
-        return location.pathname === path;
-    };
-
-    const navLinks = [
-        {
-            path: "/", label: "Dashboard", icon: (
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-                </svg>
-            )
-        },
-        {
-            path: "/calendar", label: "Calendar", icon: (
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-            )
-        },
-        {
-            path: "/youtube", label: "YouTube Videos", icon: (
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-            )
-        },
-        {
-            path: "/profile", label: "Profile", icon: (
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
-            )
-        },
-    ];
-
-    return (
-        <>
-            <style>{`
-        @keyframes slideDown {
-          from {
-            opacity: 0;
-            transform: translateY(-10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        @keyframes spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        .animate-slide-down {
-          animation: slideDown 0.3s ease-out forwards;
-        }
-        .animate-fade-in {
-          animation: fadeIn 0.2s ease-out forwards;
-        }
-        .animate-spin {
-          animation: spin 1s linear infinite;
-        }
-        .glass-nav {
-          background: rgba(0, 0, 0, 0.9);
-          backdrop-filter: blur(12px);
-          -webkit-backdrop-filter: blur(12px);
-        }
-        .logo-gradient {
-          background: linear-gradient(135deg, #ffffff, #9ca3af);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-        }
-      `}</style>
-
-            <nav className="glass-nav sticky top-0 z-50 border-b border-gray-800 shadow-xl">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex items-center justify-between h-16">
-                        {/* Logo */}
-                        <Link
-                            to="/"
-                            className="flex items-center gap-2 group cursor-pointer"
-                        >
-                            <div className="p-2 bg-gray-900 border border-gray-800 rounded-xl group-hover:border-gray-700 transition-colors">
-                                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                                </svg>
-                            </div>
-                            <span className="font-bold text-lg sm:text-xl logo-gradient">
-                                Personal LMS
-                            </span>
-                        </Link>
-
-                        {/* Desktop Navigation */}
-                        <div className="hidden md:flex items-center gap-2">
-                            {navLinks.map((link) => (
-                                <Link
-                                    key={link.path}
-                                    to={link.path}
-                                    className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-colors cursor-pointer ${isActive(link.path)
-                                            ? 'text-white bg-gray-800 border border-gray-700'
-                                            : 'text-gray-400 hover:text-white hover:bg-gray-900'
-                                        }`}
-                                >
-                                    {link.icon}
-                                    {link.label}
-                                </Link>
-                            ))}
-
-                            {user && (
-                                <div className="flex items-center gap-3 ml-4 pl-4 border-l border-gray-800">
-                                    {/* User Avatar */}
-                                    <div className="flex items-center gap-2">
-                                        <div className="w-8 h-8 rounded-full bg-gray-800 border border-gray-700 flex items-center justify-center text-white text-sm font-medium overflow-hidden">
-                                            <img src={user.avatar || "https://api.dicebear.com/9.x/avataaars/svg?seed=Nolan"} alt="" />
-                                        </div>
-                                        <span className="text-sm text-gray-300 hidden lg:block max-w-[120px] truncate">
-                                            {user.name || user.email}
-                                        </span>
-                                    </div>
-
-                                    {/* Logout Button */}
-                                    <button
-                                        onClick={handleLogout}
-                                        disabled={loggingOut}
-                                        className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 text-sm font-medium transition-all disabled:opacity-50 cursor-pointer"
-                                    >
-                                        {loggingOut ? (
-                                            <svg className="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                                            </svg>
-                                        ) : (
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                                            </svg>
-                                        )}
-                                        <span className="hidden sm:inline">Logout</span>
-                                    </button>
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Mobile Menu Button */}
-                        <button
-                            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                            className="md:hidden p-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 transition-colors cursor-pointer"
-                        >
-                            {mobileMenuOpen ? (
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            ) : (
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                                </svg>
-                            )}
-                        </button>
-                    </div>
-                </div>
-
-                {/* Mobile Menu */}
-                {mobileMenuOpen && (
-                    <div className="md:hidden border-t border-gray-800 bg-black/95 backdrop-blur-lg">
-                        <div className="px-4 py-3 space-y-1">
-                            {navLinks.map((link, idx) => (
-                                <Link
-                                    key={link.path}
-                                    to={link.path}
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all cursor-pointer ${isActive(link.path)
-                                            ? 'text-white bg-gray-800 border border-gray-700'
-                                            : 'text-gray-400 hover:text-white hover:bg-gray-900'
-                                        }`}
-                                >
-                                    {link.icon}
-                                    {link.label}
-                                </Link>
-                            ))}
-
-                            {user && (
-                                <>
-                                    <div className="my-3 border-t border-gray-800" />
-                                    <div className="flex items-center gap-3 px-4 py-2">
-                                        <div className="w-10 h-10 rounded-full bg-gray-800 border border-gray-700 flex items-center justify-center text-white font-medium overflow-hidden">
-                                            <img src={user.avatar || "https://api.dicebear.com/9.x/avataaars/svg?seed=Nolan"} alt="" />
-                                        </div>
-                                        <div>
-                                            <p className="text-sm font-medium text-white">{user.name || 'User'}</p>
-                                            <p className="text-xs text-gray-500">{user.email}</p>
-                                        </div>
-                                    </div>
-
-                                    <button
-                                        onClick={() => {
-                                            setMobileMenuOpen(false);
-                                            handleLogout();
-                                        }}
-                                        disabled={loggingOut}
-                                        className="w-full flex items-center justify-center gap-2 px-4 py-3 mt-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 text-sm font-medium transition-all disabled:opacity-50 cursor-pointer"
-                                    >
-                                        {loggingOut ? (
-                                            <svg className="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                                            </svg>
-                                        ) : (
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                                            </svg>
-                                        )}
-                                        Logout
-                                    </button>
-                                </>
-                            )}
-                        </div>
-                    </div>
-                )}
+    return <>
+        <style>{`
+            body { padding-left: 260px; transition: padding-left .25s ease; }
+            body.sidebar-collapsed { padding-left: 76px; }
+            .app-sidebar { width: 260px; transition: width .25s ease, transform .25s ease; }
+            body.sidebar-collapsed .app-sidebar { width: 76px; }
+            .sidebar-icon svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+            @media (max-width: 767px) { body, body.sidebar-collapsed { padding-left: 0; } .app-sidebar { width: 260px !important; } }
+        `}</style>
+        {mobileOpen && <button aria-label="Close navigation" onClick={() => setMobileOpen(false)} className="fixed inset-0 z-[59] bg-black/70 md:hidden" />}
+        <button aria-label="Open navigation" onClick={() => setMobileOpen(true)} className="fixed left-4 top-4 z-[58] rounded-xl border border-gray-800 bg-gray-950 p-2.5 text-gray-200 shadow-lg md:hidden">
+            <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
+        </button>
+        <aside className={`app-sidebar fixed inset-y-0 left-0 z-[60] flex flex-col border-r border-gray-800 bg-[#080808] ${mobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}>
+            <div className={`flex h-[72px] items-center border-b border-gray-800 ${collapsed ? "justify-center px-3" : "justify-between px-5"}`}>
+                <Link to="/" title="Personal LMS" className="flex min-w-0 items-center gap-3">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-gray-700 bg-gray-900 text-white"><svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M12 6.2c-2.5-1.6-5.4-1.6-9-0.1v13c3.6-1.5 6.5-1.5 9 .1m0-13c2.5-1.6 5.4-1.6 9-.1v13c-3.6-1.5-6.5-1.5-9 .1m0-13v13" /></svg></span>
+                    {!collapsed && <span className="truncate text-lg font-bold tracking-tight text-white">Personal LMS</span>}
+                </Link>
+                <button onClick={toggleCollapsed} aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"} title={collapsed ? "Expand sidebar" : "Collapse sidebar"} className={`${collapsed ? "hidden" : "hidden md:flex"} h-8 w-8 items-center justify-center rounded-lg text-gray-500 hover:bg-gray-900 hover:text-white`}>
+                    <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m14 18-6-6 6-6" /></svg>
+                </button>
+            </div>
+            {collapsed && <button onClick={toggleCollapsed} aria-label="Expand sidebar" title="Expand sidebar" className="mx-auto mt-3 hidden h-9 w-9 items-center justify-center rounded-lg text-gray-500 hover:bg-gray-900 hover:text-white md:flex"><svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m10 18 6-6-6-6" /></svg></button>}
+            <div className="px-4 pb-2 pt-6"><p className={`px-2 text-[10px] font-semibold uppercase tracking-[.18em] text-gray-600 ${collapsed ? "md:hidden" : ""}`}>Workspace</p></div>
+            <nav aria-label="Main navigation" className="flex-1 space-y-1 px-3">
+                {links.map((link) => <Link key={link.path} to={link.path} title={collapsed ? link.label : undefined} aria-current={isActive(link.path) ? "page" : undefined} className={`sidebar-icon flex h-11 items-center gap-3 rounded-xl px-3 text-sm font-medium transition ${isActive(link.path) ? "border border-gray-700 bg-gray-900 text-white" : "text-gray-400 hover:bg-gray-900/70 hover:text-white"} ${collapsed ? "md:justify-center md:px-0" : ""}`}>
+                    {link.icon}<span className={collapsed ? "md:hidden" : ""}>{link.label}</span>
+                </Link>)}
             </nav>
-        </>
-    );
+            {user && <div className={`border-t border-gray-800 p-3 ${collapsed ? "md:px-2" : ""}`}>
+                <div className={`mb-2 flex items-center gap-3 rounded-xl px-2 py-2 ${collapsed ? "md:justify-center md:px-0" : ""}`}>
+                    <img className="h-9 w-9 shrink-0 rounded-full border border-gray-700 bg-gray-900 object-cover" src={user.avatar || "https://api.dicebear.com/9.x/avataaars/svg?seed=Nolan"} alt="" />
+                    <div className={collapsed ? "md:hidden" : "min-w-0"}><p className="truncate text-sm font-medium text-gray-200">{user.name || "User"}</p><p className="truncate text-xs text-gray-500">{user.email}</p></div>
+                </div>
+                <button onClick={handleLogout} disabled={loggingOut} title={collapsed ? "Log out" : undefined} className={`flex h-10 w-full items-center gap-3 rounded-xl border border-red-500/20 bg-red-500/5 px-3 text-sm font-medium text-red-300 transition hover:bg-red-500/10 disabled:opacity-50 ${collapsed ? "md:justify-center md:px-0" : ""}`}>
+                    <svg className="h-[18px] w-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M10 17l5-5-5-5m5 5H3m9-9h6a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3h-6" /></svg><span className={collapsed ? "md:hidden" : ""}>{loggingOut ? "Logging out…" : "Log out"}</span>
+                </button>
+            </div>}
+        </aside>
+    </>;
 }

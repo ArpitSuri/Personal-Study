@@ -410,6 +410,17 @@ export default function Dashboard() {
                     </Link>
                 </div>
 
+                <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <Link to="/notes" className="group rounded-2xl border border-violet-400/20 bg-gradient-to-br from-violet-950/50 to-gray-950 p-5 transition hover:border-violet-300/50 hover:bg-violet-950/40">
+                        <div className="flex items-start justify-between"><div className="flex h-11 w-11 items-center justify-center rounded-xl border border-violet-300/20 bg-violet-400/10 text-violet-200"><svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M8 4h8l4 4v12H4V4h4zm0 0v5h8V4M8 14h8m-8 4h6" /></svg></div><span className="text-gray-500 transition group-hover:translate-x-1 group-hover:text-violet-200">↗</span></div>
+                        <h2 className="mt-4 text-lg font-semibold">Personal notes</h2><p className="mt-1 text-sm text-gray-400">Capture ideas and keep your study notes in one place.</p>
+                    </Link>
+                    <Link to="/planner" className="group rounded-2xl border border-emerald-400/20 bg-gradient-to-br from-emerald-950/40 to-gray-950 p-5 transition hover:border-emerald-300/50 hover:bg-emerald-950/30">
+                        <div className="flex items-start justify-between"><div className="flex h-11 w-11 items-center justify-center rounded-xl border border-emerald-300/20 bg-emerald-400/10 text-emerald-200"><svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M8 3v3m8-3v3M4 9h16M5 5h14a1 1 0 011 1v13H4V6a1 1 0 011-1zm3 8h3m-3 4h5" /></svg></div><span className="text-gray-500 transition group-hover:translate-x-1 group-hover:text-emerald-200">↗</span></div>
+                        <h2 className="mt-4 text-lg font-semibold">Date planner</h2><p className="mt-1 text-sm text-gray-400">Plan tasks by date, check them off, and track your progress.</p>
+                    </Link>
+                </div>
+
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                     {/* Left column: Study Timer + Today's Targets */}
                     <div className="lg:col-span-7 xl:col-span-8 space-y-8">

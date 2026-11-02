@@ -147,6 +147,15 @@ import { getProfileApi, updateProfileApi } from "../../api/profile";
 import { AuthContext } from "../../context/AuthContext";
 import { toast } from "react-hot-toast";
 
+const avatarOptions = [
+    { label: "Nolan", url: "https://api.dicebear.com/9.x/avataaars/svg?seed=Nolan" },
+    { label: "Maya", url: "https://api.dicebear.com/9.x/avataaars/svg?seed=Maya" },
+    { label: "Alex", url: "https://api.dicebear.com/9.x/avataaars/svg?seed=Alex" },
+    { label: "Jordan", url: "https://api.dicebear.com/9.x/avataaars/svg?seed=Jordan" },
+    { label: "Sam", url: "https://api.dicebear.com/9.x/avataaars/svg?seed=Sam" },
+    { label: "Taylor", url: "https://api.dicebear.com/9.x/avataaars/svg?seed=Taylor" },
+];
+
 export default function Profile() {
     const { setUser } = useContext(AuthContext);
     const [form, setForm] = useState({ name: "", avatar: "", theme: "dark" });
@@ -331,7 +340,7 @@ export default function Profile() {
                             <div className="relative group">
                                 <div className="w-24 h-24 rounded-full overflow-hidden bg-linear-to-br from-blue-500 to-purple-500 p-0.5">
                                     <div className="w-full h-full rounded-full overflow-hidden bg-gray-800">
-                                        {form.avatar && !avatarError ? (
+                                {form.avatar && !avatarError ? (
                                             <>
                                                 {!avatarLoaded && (
                                                     <div className="absolute inset-0 avatar-skeleton rounded-full" />
@@ -387,22 +396,26 @@ export default function Profile() {
                             />
                         </div>
 
-                        {/* Avatar URL Field */}
+                        {/* Avatar picker */}
                         <div className="animate-fade-in stagger-2">
                             <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
                                 <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                 </svg>
-                                Avatar URL
+                                Choose an avatar
                             </label>
-                            <input
-                                className="input-field w-full bg-gray-800/50 border border-gray-600 rounded-xl p-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-all"
-                                placeholder="https://example.com/avatar.jpg"
-                                value={form.avatar}
+                            <select
+                                value={avatarOptions.some((option) => option.url === form.avatar) ? form.avatar : ""}
                                 onChange={(e) => setForm({ ...form, avatar: e.target.value })}
-                            />
+                                className="input-field w-full appearance-none bg-gray-800/70 border border-gray-600 rounded-xl p-3 text-white focus:outline-none focus:border-blue-500 transition-all"
+                            >
+                                <option value="" disabled>Select an avatar</option>
+                                {avatarOptions.map((option) => (
+                                    <option key={option.label} value={option.url}>{option.label} avatar</option>
+                                ))}
+                            </select>
                             <p className="mt-2 text-xs text-gray-500">
-                                Enter a URL to an image for your profile picture
+                                Choose an avatar style from the list. If it cannot load, your initials will be shown.
                             </p>
                         </div>
 

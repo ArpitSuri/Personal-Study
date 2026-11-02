@@ -10,6 +10,7 @@ import VideoPlayer from "./pages/video/VideoPlayer";
 import Profile from "./pages/profile/Profile";
 import Calendar from "./pages/calendar/Calendar";
 import YouTubeVideos from "./pages/youtube/YouTubeVideos";
+import Notes from "./pages/notes/Notes";
 
 function App() {
   return (
@@ -35,6 +36,14 @@ function App() {
               <Calendar />
             </ProtectedRoute>
           }
+        />
+        <Route
+          path="/planner"
+          element={<ProtectedRoute><Calendar /></ProtectedRoute>}
+        />
+        <Route
+          path="/notes"
+          element={<ProtectedRoute><Notes /></ProtectedRoute>}
         />
         <Route
           path="/youtube"
