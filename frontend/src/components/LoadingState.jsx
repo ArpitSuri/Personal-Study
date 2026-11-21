@@ -173,7 +173,7 @@ export default function LoadingState() {
                     {/* Brand Name */}
                     <div className="mb-6 animate-fade-in stagger-1">
                         <h1 className="text-4xl sm:text-5xl font-bold text-white mb-2">
-                            Personal Study
+                            Study Room
                         </h1>
                         <div className="flex justify-center">
                             <div className="w-32 h-0.5 bg-linear-to-r from-transparent via-white to-transparent"></div>

@@ -11,7 +11,8 @@ import profileRoutes from "./routers/profileRouter.js";
 import calendarRoutes from "./routers/calendarRouter.js";
 import focusRoutes from "./routers/focusRouter.js";
 import noteRoutes from "./routers/noteRouter.js";
-
+import meetingRoutes from "./routers/meetingRouter.js";
+import adminRoutes from "./routers/adminRouter.js";
 const app = express();
 
 // middleware
@@ -26,6 +27,8 @@ app.use("/api/profile", profileRoutes);
 app.use("/api/calendar", calendarRoutes);
 app.use("/api/focus", focusRoutes);
 app.use("/api/notes", noteRoutes);
+app.use("/api/meetings", meetingRoutes);
+app.use("/api/admin", adminRoutes);
 app.get("/", (req, res) => {
     res.send("LMS backend running");
 });

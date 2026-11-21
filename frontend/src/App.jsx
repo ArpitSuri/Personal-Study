@@ -11,6 +11,11 @@ import Profile from "./pages/profile/Profile";
 import Calendar from "./pages/calendar/Calendar";
 import YouTubeVideos from "./pages/youtube/YouTubeVideos";
 import Notes from "./pages/notes/Notes";
+import Meetings from "./pages/meetings/Meetings";
+import MeetingRoom from "./pages/meetings/MeetingRoom";
+import AdminRoute from "./components/AdminRoute";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import HomeRoute from "./components/HomeRoute";
 
 function App() {
   return (
@@ -19,15 +24,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/" element={<HomeRoute />} />
 
         <Route
           path="/calendar"
@@ -80,6 +77,11 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        {/* <Route path="/meetings" element={<ProtectedRoute><Meetings /></ProtectedRoute>} />
+        <Route path="/meetings/:id" element={<ProtectedRoute><MeetingRoom /></ProtectedRoute>} /> */}
+        <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+        
       </Routes>
     </BrowserRouter>
   );

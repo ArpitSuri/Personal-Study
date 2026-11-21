@@ -1,9 +1,223 @@
 @import "tailwindcss";
 
+/* ------------------------------------------------------------------
+   Study Room palette, 60 / 30 / 10
+   60%  canvas   page background
+   30%  surface  sidebar, panels, inputs
+   10%  accent   primary buttons, active item, links
+   ink is the text colour, a tint of the canvas family (not a 4th colour).
+   To change the palette, edit these four values and the accent and grey
+   scales below them (the scales are what the existing pages use).
+------------------------------------------------------------------- */
+@theme {
+  --color-canvas: #12201b;
+  --color-surface: #1b2d26;
+  --color-accent: #e9c75d;
+  --color-ink: #eef0e8;
+
+  --font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+
+  --color-accent-50: #fbf7e6;
+  --color-accent-100: #f6edc8;
+  --color-accent-200: #f2e3a6;
+  --color-accent-300: #efd986;
+  --color-accent-400: #ecce6e;
+  --color-accent-500: #e9c75d;
+  --color-accent-600: #d2af45;
+  --color-accent-700: #a98a2e;
+  --color-accent-800: #7c6522;
+  --color-accent-900: #51431a;
+  --color-accent-950: #2e2810;
+
+  /* Re-skin the existing pages: plain white/black and the grey scale follow the palette */
+  --color-white: #eef0e8;
+  --color-black: #12201b;
+
+  --color-gray-50: #f4f6f1;
+  --color-gray-100: #e6ebe4;
+  --color-gray-200: #d2dad1;
+  --color-gray-300: #b7c2b8;
+  --color-gray-400: #94a399;
+  --color-gray-500: #7f9086;
+  --color-gray-600: #5f7167;
+  --color-gray-700: #3a4d43;
+  --color-gray-800: #2a3d34;
+  --color-gray-900: #213329;
+  --color-gray-950: #1b2d26;
+
+  /* Every other decorative colour collapses into the single accent.
+     Red is left alone on purpose: it only marks errors and destructive actions. */
+  --color-emerald-50: #fbf7e6;
+  --color-emerald-100: #f6edc8;
+  --color-emerald-200: #f2e3a6;
+  --color-emerald-300: #efd986;
+  --color-emerald-400: #ecce6e;
+  --color-emerald-500: #e9c75d;
+  --color-emerald-600: #d2af45;
+  --color-emerald-700: #a98a2e;
+  --color-emerald-800: #7c6522;
+  --color-emerald-900: #51431a;
+  --color-emerald-950: #2e2810;
+  --color-blue-50: #fbf7e6;
+  --color-blue-100: #f6edc8;
+  --color-blue-200: #f2e3a6;
+  --color-blue-300: #efd986;
+  --color-blue-400: #ecce6e;
+  --color-blue-500: #e9c75d;
+  --color-blue-600: #d2af45;
+  --color-blue-700: #a98a2e;
+  --color-blue-800: #7c6522;
+  --color-blue-900: #51431a;
+  --color-blue-950: #2e2810;
+  --color-violet-50: #fbf7e6;
+  --color-violet-100: #f6edc8;
+  --color-violet-200: #f2e3a6;
+  --color-violet-300: #efd986;
+  --color-violet-400: #ecce6e;
+  --color-violet-500: #e9c75d;
+  --color-violet-600: #d2af45;
+  --color-violet-700: #a98a2e;
+  --color-violet-800: #7c6522;
+  --color-violet-900: #51431a;
+  --color-violet-950: #2e2810;
+  --color-purple-50: #fbf7e6;
+  --color-purple-100: #f6edc8;
+  --color-purple-200: #f2e3a6;
+  --color-purple-300: #efd986;
+  --color-purple-400: #ecce6e;
+  --color-purple-500: #e9c75d;
+  --color-purple-600: #d2af45;
+  --color-purple-700: #a98a2e;
+  --color-purple-800: #7c6522;
+  --color-purple-900: #51431a;
+  --color-purple-950: #2e2810;
+  --color-amber-50: #fbf7e6;
+  --color-amber-100: #f6edc8;
+  --color-amber-200: #f2e3a6;
+  --color-amber-300: #efd986;
+  --color-amber-400: #ecce6e;
+  --color-amber-500: #e9c75d;
+  --color-amber-600: #d2af45;
+  --color-amber-700: #a98a2e;
+  --color-amber-800: #7c6522;
+  --color-amber-900: #51431a;
+  --color-amber-950: #2e2810;
+  --color-green-50: #fbf7e6;
+  --color-green-100: #f6edc8;
+  --color-green-200: #f2e3a6;
+  --color-green-300: #efd986;
+  --color-green-400: #ecce6e;
+  --color-green-500: #e9c75d;
+  --color-green-600: #d2af45;
+  --color-green-700: #a98a2e;
+  --color-green-800: #7c6522;
+  --color-green-900: #51431a;
+  --color-green-950: #2e2810;
+  --color-pink-50: #fbf7e6;
+  --color-pink-100: #f6edc8;
+  --color-pink-200: #f2e3a6;
+  --color-pink-300: #efd986;
+  --color-pink-400: #ecce6e;
+  --color-pink-500: #e9c75d;
+  --color-pink-600: #d2af45;
+  --color-pink-700: #a98a2e;
+  --color-pink-800: #7c6522;
+  --color-pink-900: #51431a;
+  --color-pink-950: #2e2810;
+  --color-indigo-50: #fbf7e6;
+  --color-indigo-100: #f6edc8;
+  --color-indigo-200: #f2e3a6;
+  --color-indigo-300: #efd986;
+  --color-indigo-400: #ecce6e;
+  --color-indigo-500: #e9c75d;
+  --color-indigo-600: #d2af45;
+  --color-indigo-700: #a98a2e;
+  --color-indigo-800: #7c6522;
+  --color-indigo-900: #51431a;
+  --color-indigo-950: #2e2810;
+  --color-sky-50: #fbf7e6;
+  --color-sky-100: #f6edc8;
+  --color-sky-200: #f2e3a6;
+  --color-sky-300: #efd986;
+  --color-sky-400: #ecce6e;
+  --color-sky-500: #e9c75d;
+  --color-sky-600: #d2af45;
+  --color-sky-700: #a98a2e;
+  --color-sky-800: #7c6522;
+  --color-sky-900: #51431a;
+  --color-sky-950: #2e2810;
+  --color-cyan-50: #fbf7e6;
+  --color-cyan-100: #f6edc8;
+  --color-cyan-200: #f2e3a6;
+  --color-cyan-300: #efd986;
+  --color-cyan-400: #ecce6e;
+  --color-cyan-500: #e9c75d;
+  --color-cyan-600: #d2af45;
+  --color-cyan-700: #a98a2e;
+  --color-cyan-800: #7c6522;
+  --color-cyan-900: #51431a;
+  --color-cyan-950: #2e2810;
+  --color-teal-50: #fbf7e6;
+  --color-teal-100: #f6edc8;
+  --color-teal-200: #f2e3a6;
+  --color-teal-300: #efd986;
+  --color-teal-400: #ecce6e;
+  --color-teal-500: #e9c75d;
+  --color-teal-600: #d2af45;
+  --color-teal-700: #a98a2e;
+  --color-teal-800: #7c6522;
+  --color-teal-900: #51431a;
+  --color-teal-950: #2e2810;
+  --color-orange-50: #fbf7e6;
+  --color-orange-100: #f6edc8;
+  --color-orange-200: #f2e3a6;
+  --color-orange-300: #efd986;
+  --color-orange-400: #ecce6e;
+  --color-orange-500: #e9c75d;
+  --color-orange-600: #d2af45;
+  --color-orange-700: #a98a2e;
+  --color-orange-800: #7c6522;
+  --color-orange-900: #51431a;
+  --color-orange-950: #2e2810;
+  --color-yellow-50: #fbf7e6;
+  --color-yellow-100: #f6edc8;
+  --color-yellow-200: #f2e3a6;
+  --color-yellow-300: #efd986;
+  --color-yellow-400: #ecce6e;
+  --color-yellow-500: #e9c75d;
+  --color-yellow-600: #d2af45;
+  --color-yellow-700: #a98a2e;
+  --color-yellow-800: #7c6522;
+  --color-yellow-900: #51431a;
+  --color-yellow-950: #2e2810;
+  --color-lime-50: #fbf7e6;
+  --color-lime-100: #f6edc8;
+  --color-lime-200: #f2e3a6;
+  --color-lime-300: #efd986;
+  --color-lime-400: #ecce6e;
+  --color-lime-500: #e9c75d;
+  --color-lime-600: #d2af45;
+  --color-lime-700: #a98a2e;
+  --color-lime-800: #7c6522;
+  --color-lime-900: #51431a;
+  --color-lime-950: #2e2810;
+  --color-fuchsia-50: #fbf7e6;
+  --color-fuchsia-100: #f6edc8;
+  --color-fuchsia-200: #f2e3a6;
+  --color-fuchsia-300: #efd986;
+  --color-fuchsia-400: #ecce6e;
+  --color-fuchsia-500: #e9c75d;
+  --color-fuchsia-600: #d2af45;
+  --color-fuchsia-700: #a98a2e;
+  --color-fuchsia-800: #7c6522;
+  --color-fuchsia-900: #51431a;
+  --color-fuchsia-950: #2e2810;
+}
+
 @layer base {
   body {
-    background-color: #000000 !important;
-    color: #ffffff;
+    background-color: var(--color-canvas) !important;
+    color: var(--color-ink);
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   }
 
@@ -16,6 +230,15 @@
   input[type="button"],
   select {
     cursor: pointer !important;
+  }
+
+  /* visible keyboard focus everywhere */
+  a:focus-visible,
+  button:focus-visible,
+  select:focus-visible,
+  [role="button"]:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
   }
 }
 
@@ -30,14 +253,14 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #333333;
+  background-color: var(--color-gray-700);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #555555;
+  background-color: var(--color-gray-600);
 }
 
 ::-webkit-scrollbar-track {
-  background: #000000;
+  background: var(--color-canvas);
 }

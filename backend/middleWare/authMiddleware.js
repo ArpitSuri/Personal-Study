@@ -12,6 +12,13 @@ export const auth = async (req, res, next) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const user = await User.findById(decoded.id).select("-password");
         if (!user) return res.status(401).json({ message: "User not found" });
+        if (user.isBlocked)
+            return res.status(403).json({ message: "Your account has been suspended" });
+
+        // "last active" for the dashboard, written at most once an hour per user
+        if (!user.lastActiveAt || Date.now() - user.lastActiveAt.getTime() > 60 * 60 * 1000) {
+            await User.updateOne({ _id: user._id }, { lastActiveAt: new Date() });
+        }
 
         req.user = user;
         next();
